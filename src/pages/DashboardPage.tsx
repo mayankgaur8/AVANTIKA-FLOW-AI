@@ -147,10 +147,10 @@ function GuideCard({ guide, color, onOpen, onShare, onDuplicate, onDelete, onFav
 
 function DashboardSkeleton() {
   return (
-    <div className="px-6 py-8 max-w-6xl mx-auto animate-pulse">
+    <div className="px-4 sm:px-6 py-6 sm:py-8 max-w-6xl mx-auto animate-pulse">
       <div className="h-20 rounded-2xl mb-6" style={{ background: 'rgba(255,255,255,0.05)' }} />
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-        <div className="xl:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="h-44 rounded-2xl" style={{ background: 'rgba(255,255,255,0.04)' }} />
           ))}
@@ -303,8 +303,9 @@ export const DashboardPage = () => {
       primaryCtaLabel={primaryCtaLabel}
       primaryCtaHighlighted={Boolean(nextChecklistStep && !nextChecklistStep.completed)}
       onNewGuide={() => setGuideModeOpen(true)}
+      contentClassName=""
     >
-      <div className="px-6 py-8 max-w-6xl mx-auto">
+      <div className="px-4 sm:px-6 py-6 sm:py-8 max-w-6xl mx-auto">
         {loading && <DashboardSkeleton />}
 
         {!loading && error && (
@@ -370,8 +371,8 @@ export const DashboardPage = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-              <div className="xl:col-span-3">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+              <div className="lg:col-span-3">
                 {data.guides.length === 0 ? (
                   <div className="rounded-2xl p-8 text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px dashed rgba(255,255,255,0.14)' }}>
                     <Sparkles className="mx-auto mb-3" size={22} style={{ color: '#93c5fd' }} />
@@ -427,7 +428,7 @@ export const DashboardPage = () => {
                 )}
               </div>
 
-              <div className="xl:col-span-1 space-y-5">
+              <div className="lg:col-span-1 space-y-5">
                 {nextChecklistStep && (
                   <div className="rounded-2xl p-4" style={{ background: 'rgba(245,158,11,0.10)', border: '1px solid rgba(245,158,11,0.22)' }}>
                     <p className="text-xs font-semibold mb-1" style={{ color: '#fbbf24' }}>Next recommended action</p>

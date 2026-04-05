@@ -66,7 +66,7 @@ export const Footer = () => {
 
   return (
     <footer
-      className="relative pt-20 pb-10 px-5 md:px-8"
+      className="relative pt-14 sm:pt-20 pb-8 sm:pb-10 px-4 sm:px-6 md:px-8"
       style={{
         borderTop: '1px solid rgba(255,255,255,0.07)',
         zIndex: 1,

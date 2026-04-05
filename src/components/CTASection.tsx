@@ -15,7 +15,7 @@ export const CTASection = () => {
   const location = useLocation();
   const { openSales } = useSalesInquiry();
   return (
-    <section id="tour-cta" className="relative py-24 px-5 md:px-8" style={{ zIndex: 1 }}>
+    <section id="tour-cta" className="relative py-16 sm:py-24 px-4 sm:px-6 md:px-8" style={{ zIndex: 1 }}>
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 32, scale: 0.97 }}

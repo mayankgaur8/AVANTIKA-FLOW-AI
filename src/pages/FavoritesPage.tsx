@@ -241,7 +241,7 @@ function FavoritesEmpty({ onBrowse, onCreate }: { onBrowse: () => void; onCreate
 
 function FavoritesSkeleton() {
   return (
-    <div className="px-6 py-8 max-w-6xl mx-auto animate-pulse">
+    <div className="px-4 sm:px-6 py-6 sm:py-8 max-w-6xl mx-auto animate-pulse">
       <div className="h-10 w-48 rounded-xl mb-2" style={{ background: 'rgba(255,255,255,0.06)' }} />
       <div className="h-4 w-72 rounded-lg mb-8" style={{ background: 'rgba(255,255,255,0.04)' }} />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -340,8 +340,9 @@ export const FavoritesPage = () => {
       primaryCtaLabel="New Guide"
       primaryCtaHighlighted={false}
       onNewGuide={() => navigate('/dashboard')}
+      contentClassName=""
     >
-      <div className="px-6 py-8 max-w-6xl mx-auto">
+      <div className="px-4 sm:px-6 py-6 sm:py-8 max-w-6xl mx-auto">
 
         {loading && <FavoritesSkeleton />}
 

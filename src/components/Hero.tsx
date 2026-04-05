@@ -144,7 +144,7 @@ export const Hero = ({ onTakeTour, onRequestDemo }: HeroProps) => {
   return (
     <section
       id="tour-hero"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-5 md:px-8 pt-16 pb-20"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 sm:px-6 md:px-8 pt-16 pb-20"
       style={{ zIndex: 1 }}
       aria-label="Hero section"
     >
@@ -162,7 +162,7 @@ export const Hero = ({ onTakeTour, onRequestDemo }: HeroProps) => {
         {/* Headline */}
         <motion.h1
           variants={itemVariants}
-          className="text-5xl sm:text-6xl lg:text-[76px] font-black leading-[1.06] tracking-tight mb-6"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-[76px] font-black leading-[1.06] tracking-tight mb-6"
         >
           <span className="text-white">Turn your workflows into </span>
           <span
@@ -178,7 +178,7 @@ export const Hero = ({ onTakeTour, onRequestDemo }: HeroProps) => {
         {/* Subtitle */}
         <motion.p
           variants={itemVariants}
-          className="text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
+          className="text-base sm:text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
           style={{ color: 'rgba(255,255,255,0.62)' }}
         >
           Capture, standardize, and optimize every process with AI-driven automation — so your teams work faster, smarter, and without errors.
@@ -277,7 +277,7 @@ export const Hero = ({ onTakeTour, onRequestDemo }: HeroProps) => {
         </motion.div>
 
         {/* CTA Buttons */}
-        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-3">
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
           {/* Primary: Get Started */}
           <motion.button
             onClick={() => {
@@ -287,7 +287,7 @@ export const Hero = ({ onTakeTour, onRequestDemo }: HeroProps) => {
               }
               navigate('/workflow-ai/sop-builder');
             }}
-            className="flex items-center gap-2 px-8 py-4 rounded-full text-white font-bold text-base select-none"
+            className="flex items-center justify-center gap-2 px-8 py-4 rounded-full text-white font-bold text-base select-none w-full sm:w-auto"
             style={{
               background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 55%, #ec4899 100%)',
               boxShadow: '0 4px 30px rgba(139,92,246,0.45), 0 2px 10px rgba(0,0,0,0.3)',
@@ -312,7 +312,7 @@ export const Hero = ({ onTakeTour, onRequestDemo }: HeroProps) => {
           {/* Secondary: Take a Tour */}
           <motion.button
             onClick={onTakeTour}
-            className="flex items-center gap-2 px-6 py-4 rounded-full text-white font-semibold text-sm select-none"
+            className="flex items-center justify-center gap-2 px-6 py-4 rounded-full text-white font-semibold text-sm select-none w-full sm:w-auto"
             style={{
               background: 'rgba(255,255,255,0.07)',
               border: '1px solid rgba(255,255,255,0.16)',
@@ -334,7 +334,7 @@ export const Hero = ({ onTakeTour, onRequestDemo }: HeroProps) => {
           {/* Tertiary: Request Demo */}
           <motion.button
             onClick={onRequestDemo}
-            className="flex items-center gap-2 px-6 py-4 rounded-full text-white font-semibold text-sm select-none"
+            className="flex items-center justify-center gap-2 px-6 py-4 rounded-full text-white font-semibold text-sm select-none w-full sm:w-auto"
             style={{
               background: 'rgba(255,255,255,0.04)',
               border: '1px solid rgba(255,255,255,0.10)',

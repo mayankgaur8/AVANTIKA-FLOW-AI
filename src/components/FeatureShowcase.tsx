@@ -126,8 +126,8 @@ function MockupWindow({ rows, accent }: { rows: { label: string; done: boolean }
 
 export const FeatureShowcase = () => {
   return (
-    <section className="relative py-12 px-5 md:px-8" style={{ zIndex: 1 }}>
-      <div className="max-w-6xl mx-auto space-y-32">
+    <section className="relative py-8 sm:py-12 px-4 sm:px-6 md:px-8" style={{ zIndex: 1 }}>
+      <div className="max-w-6xl mx-auto space-y-16 sm:space-y-24 lg:space-y-32">
         {FEATURES.map(({ badge, icon: Icon, accent, glow, title, description, bullets, mockupRows, flip }, idx) => (
           <motion.div
             key={badge}

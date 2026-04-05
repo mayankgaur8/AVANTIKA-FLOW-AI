@@ -161,7 +161,7 @@ function RecentActivityItem({ activity }: { activity: RecentActivity }) {
 
 function RecentSkeleton() {
   return (
-    <div className="px-6 py-8 max-w-7xl mx-auto animate-pulse">
+    <div className="px-4 sm:px-6 py-6 sm:py-8 max-w-7xl mx-auto animate-pulse">
       <div className="h-12 rounded-xl mb-8 w-64" style={{ background: 'rgba(255,255,255,0.05)' }} />
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div className="xl:col-span-2">
@@ -262,14 +262,14 @@ export const RecentPage = () => {
   const isEmpty = !loading && recentGuides.length === 0 && recentActivity.length === 0;
 
   return (
-    <AppShell primaryCtaLabel="New Guide">
+    <AppShell primaryCtaLabel="New Guide" contentClassName="">
       <div style={{ background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%)' }}>
         {loading && <RecentSkeleton />}
 
         {!loading && isEmpty && <RecentEmptyState />}
 
         {!loading && !isEmpty && (
-          <div className="px-6 py-8 max-w-7xl mx-auto">
+          <div className="px-4 sm:px-6 py-6 sm:py-8 max-w-7xl mx-auto">
             <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
               <h1 className="text-4xl font-black text-white mb-2">Recent</h1>
               <p className="text-base" style={{ color: 'rgba(255,255,255,0.45)' }}>

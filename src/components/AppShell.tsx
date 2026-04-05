@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { startGoogleOAuth } from '../lib/oauth';
 import { BrandLogo } from './BrandLogo';
 
 const NAV_ITEMS = [
@@ -37,9 +36,11 @@ interface AppShellProps {
   primaryCtaLabel?: string;
   primaryCtaHighlighted?: boolean;
   workspaceName?: string | null;
+  /** Custom className for the main content wrapper. Pass '' to opt out of default padding. */
+  contentClassName?: string;
 }
 
-export const AppShell = ({ children, onNewGuide, primaryCtaLabel = 'New Guide', primaryCtaHighlighted = false, workspaceName = null }: AppShellProps) => {
+export const AppShell = ({ children, onNewGuide, primaryCtaLabel = 'New Guide', primaryCtaHighlighted = false, workspaceName = null, contentClassName }: AppShellProps) => {
   const { user, signOut } = useAuth();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
@@ -282,7 +283,9 @@ export const AppShell = ({ children, onNewGuide, primaryCtaLabel = 'New Guide', 
 
         {/* Page content */}
         <main className="flex-1 overflow-y-auto">
-          {children}
+          <div className={contentClassName ?? 'px-4 sm:px-6 lg:px-8 py-6 max-w-6xl mx-auto'}>
+            {children}
+          </div>
         </main>
       </div>
     </div>

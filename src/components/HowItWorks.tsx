@@ -33,7 +33,7 @@ const STEPS = [
 
 export const HowItWorks = () => {
   return (
-    <section className="relative py-28 px-5 md:px-8" style={{ zIndex: 1 }}>
+    <section className="relative py-16 sm:py-28 px-4 sm:px-6 md:px-8" style={{ zIndex: 1 }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div

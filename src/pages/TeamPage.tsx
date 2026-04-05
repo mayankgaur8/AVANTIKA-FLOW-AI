@@ -637,20 +637,20 @@ export const TeamPage = () => {
   ];
 
   if (loading) return (
-    <AppShell workspaceName={authUser?.team_name || null} primaryCtaLabel="New Guide" primaryCtaHighlighted={false} onNewGuide={() => navigate('/dashboard')}>
+    <AppShell workspaceName={authUser?.team_name || null} primaryCtaLabel="New Guide" primaryCtaHighlighted={false} onNewGuide={() => navigate('/dashboard')} contentClassName="">
       <TeamSkeleton />
     </AppShell>
   );
 
   if (!workspace && !error) return (
-    <AppShell workspaceName={null} primaryCtaLabel="Create Workspace" primaryCtaHighlighted onNewGuide={() => navigate('/onboarding/team')}>
+    <AppShell workspaceName={null} primaryCtaLabel="Create Workspace" primaryCtaHighlighted onNewGuide={() => navigate('/onboarding/team')} contentClassName="">
       <NoWorkspace onNavigate={() => navigate('/onboarding/team')} />
     </AppShell>
   );
 
   return (
-    <AppShell workspaceName={workspace?.name || authUser?.team_name || null} primaryCtaLabel="New Guide" primaryCtaHighlighted={false} onNewGuide={() => navigate('/dashboard')}>
-      <div className="px-6 py-8 max-w-6xl mx-auto">
+    <AppShell workspaceName={workspace?.name || authUser?.team_name || null} primaryCtaLabel="New Guide" primaryCtaHighlighted={false} onNewGuide={() => navigate('/dashboard')} contentClassName="">
+      <div className="px-4 sm:px-6 py-6 sm:py-8 max-w-6xl mx-auto">
 
         {/* ── Header ── */}
         <motion.div initial={{ opacity: 0, y: -14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="flex items-start justify-between gap-4 mb-7 flex-wrap">

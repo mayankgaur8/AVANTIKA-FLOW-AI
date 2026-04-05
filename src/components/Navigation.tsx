@@ -183,7 +183,7 @@ export const Navigation = () => {
             </ul>
 
             {/* Right side: Sign in + Get Started */}
-            <div className="hidden lg:flex items-center gap-1.5">
+            <div className="hidden md:flex items-center gap-1.5">
               <Link
                 to="/signin"
                 className="px-4 py-2 text-sm font-medium rounded-xl transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"

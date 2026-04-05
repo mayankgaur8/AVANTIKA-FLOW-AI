@@ -1219,8 +1219,8 @@ export const GuidePage = () => {
 
   if (loading) {
     return (
-      <AppShell workspaceName={null} primaryCtaLabel="New Guide" primaryCtaHighlighted={false} onNewGuide={() => navigate('/dashboard')}>
-        <div className="px-6 py-8 max-w-5xl mx-auto animate-pulse">
+      <AppShell workspaceName={null} primaryCtaLabel="New Guide" primaryCtaHighlighted={false} onNewGuide={() => navigate('/dashboard')} contentClassName="">
+        <div className="px-4 sm:px-6 py-6 sm:py-8 max-w-5xl mx-auto animate-pulse">
           <div className="h-8 w-52 rounded-xl mb-6" style={{ background: 'rgba(255,255,255,0.05)' }} />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="space-y-2">{Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-12 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)' }} />)}</div>
@@ -1233,7 +1233,7 @@ export const GuidePage = () => {
 
   if (error || !guide) {
     return (
-      <AppShell workspaceName={null} primaryCtaLabel="New Guide" primaryCtaHighlighted={false} onNewGuide={() => navigate('/dashboard')}>
+      <AppShell workspaceName={null} primaryCtaLabel="New Guide" primaryCtaHighlighted={false} onNewGuide={() => navigate('/dashboard')} contentClassName="">
         <div className="px-6 py-20 max-w-lg mx-auto text-center">
           <AlertCircle size={28} className="mx-auto mb-4" style={{ color: '#fca5a5' }} />
           <h2 className="text-white text-xl font-bold mb-2">Guide not found</h2>
@@ -1247,8 +1247,8 @@ export const GuidePage = () => {
   }
 
   return (
-    <AppShell workspaceName={null} primaryCtaLabel="New Guide" primaryCtaHighlighted={false} onNewGuide={() => navigate('/dashboard')}>
-      <div className="px-6 py-8 max-w-5xl mx-auto">
+    <AppShell workspaceName={null} primaryCtaLabel="New Guide" primaryCtaHighlighted={false} onNewGuide={() => navigate('/dashboard')} contentClassName="">
+      <div className="px-4 sm:px-6 py-6 sm:py-8 max-w-5xl mx-auto">
 
         {/* ── Header ── */}
         <div className="flex items-start gap-3 mb-5">
