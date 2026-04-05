@@ -1,3 +1,5 @@
+import { API_BASE } from './config';
+
 export interface SalesInquiryPayload {
   full_name: string;
   email: string;
@@ -67,8 +69,8 @@ export interface DashboardBootstrapResponse {
   }>;
 }
 
-const request = async <T>(url: string, init?: RequestInit): Promise<T> => {
-  const response = await fetch(url, {
+const request = async <T>(path: string, init?: RequestInit): Promise<T> => {
+  const response = await fetch(`${API_BASE}${path}`, {
     credentials: 'include',
     ...init,
     headers: {
@@ -84,8 +86,8 @@ const request = async <T>(url: string, init?: RequestInit): Promise<T> => {
   return body as T;
 };
 
-const uploadRequest = async <T>(url: string, formData: FormData, token: string): Promise<T> => {
-  const response = await fetch(url, {
+const uploadRequest = async <T>(path: string, formData: FormData, token: string): Promise<T> => {
+  const response = await fetch(`${API_BASE}${path}`, {
     method: 'POST',
     credentials: 'include',
     headers: {

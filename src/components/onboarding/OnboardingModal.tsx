@@ -11,6 +11,7 @@ import { useAuth } from '../../context/AuthContext';
 import { BrandLogo } from '../BrandLogo';
 import { api } from '../../lib/api';
 import { authStore } from '../../lib/auth';
+import { startGoogleOAuth } from '../../lib/oauth';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -368,16 +369,14 @@ const Step4: React.FC = () => {
   const handleGoogleSignup = () => {
     if (isGoogleLoading) return;
     setIsGoogleLoading(true);
-    const params = new URLSearchParams({
-      source_page: data.sourcePage,
-      cta_clicked: data.ctaClicked || 'onboarding_google_signup',
-      campaign_source: data.campaignSource || '',
-      selected_use_case: data.useCases[0] || '',
-      selected_team: data.team || '',
-      selected_persona: data.userType || '',
+    startGoogleOAuth({
+      sourcePage: data.sourcePage,
+      ctaClicked: data.ctaClicked || 'onboarding_google_signup',
+      campaignSource: data.campaignSource || '',
+      selectedUseCase: data.useCases[0] || '',
+      selectedTeam: data.team || '',
+      selectedPersona: data.userType || '',
     });
-
-    window.location.href = `/api/auth/google?${params.toString()}`;
   };
 
   if (isSuccess) {

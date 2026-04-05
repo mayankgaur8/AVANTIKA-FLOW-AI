@@ -7,6 +7,7 @@ import { api } from '../lib/api';
 import { authStore } from '../lib/auth';
 import { useAuth } from '../context/AuthContext';
 import { sanitizeRedirectPath, setPostAuthRedirect, consumePostAuthRedirect } from '../lib/postAuthRedirect';
+import { startGoogleOAuth } from '../lib/oauth';
 
 export const SignInPage = () => {
   const navigate = useNavigate();
@@ -63,13 +64,12 @@ export const SignInPage = () => {
   };
 
   const onGoogleSignIn = () => {
-    const params = new URLSearchParams({
-      source_page: location.pathname,
-      cta_clicked: 'signin_google',
-      campaign_source: new URLSearchParams(location.search).get('utm_source') || '',
-      redirect_to: redirectTo || '',
+    startGoogleOAuth({
+      sourcePage: location.pathname,
+      ctaClicked: 'signin_google',
+      campaignSource: new URLSearchParams(location.search).get('utm_source') || '',
+      redirectTo: redirectTo || '',
     });
-    window.location.href = `/api/auth/google?${params.toString()}`;
   };
 
   return (
