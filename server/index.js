@@ -149,15 +149,74 @@ app.use((err, _req, res, _next) => {
 // ─── Start ───────────────────────────────────────────────────────────────────
 
 app.listen(PORT, () => {
-  const googleClientId = process.env.GOOGLE_CLIENT_ID || '';
-  const maskedGoogleClientId = googleClientId ? `${googleClientId.slice(0, 10)}...` : '(missing)';
+  const env = process.env;
+  const isProd = (env.NODE_ENV || 'development') === 'production';
 
-  console.log(`\n🚀  Avantika Flow AI server running`);
-  console.log(`    Local:  http://localhost:${PORT}`);
-  console.log(`    Health: http://localhost:${PORT}/health\n`);
-  console.log(`    GOOGLE_CLIENT_ID: ${maskedGoogleClientId}`);
-  console.log(`    GOOGLE_CALLBACK_URL: ${process.env.GOOGLE_CALLBACK_URL || '(default http://localhost:3001/api/auth/google/callback)'}`);
-  console.log(`    FRONTEND_URL: ${process.env.FRONTEND_URL || process.env.CLIENT_ORIGIN || '(default http://localhost:5173)'}\n`);
+  // ── Required vars ──────────────────────────────────────────────────────────
+  const required = {
+    GOOGLE_CLIENT_ID:     env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: env.GOOGLE_CLIENT_SECRET,
+    GOOGLE_CALLBACK_URL:  env.GOOGLE_CALLBACK_URL,
+    JWT_SECRET:           env.JWT_SECRET,
+    CLIENT_ORIGIN:        env.CLIENT_ORIGIN || env.FRONTEND_URL,
+    SERVER_BASE_URL:      env.SERVER_BASE_URL,
+  };
+
+  console.log('\n' + '─'.repeat(60));
+  console.log('  Avantika Flow AI — server startup');
+  console.log('─'.repeat(60));
+  console.log(`  PORT      : ${PORT}`);
+  console.log(`  NODE_ENV  : ${env.NODE_ENV || '(unset — defaulting to development)'}`);
+  console.log(`  Health    : http://localhost:${PORT}/health`);
+  console.log('');
+  console.log('  ── Google OAuth config ──────────────────────────');
+
+  const gid = env.GOOGLE_CLIENT_ID;
+  const gsec = env.GOOGLE_CLIENT_SECRET;
+  const gcb = env.GOOGLE_CALLBACK_URL;
+
+  console.log(`  GOOGLE_CLIENT_ID     : ${gid  ? `${gid.slice(0, 12)}... ✓` : '(missing) ✗'}`);
+  console.log(`  GOOGLE_CLIENT_SECRET : ${gsec ? `${gsec.slice(0, 6)}...  ✓` : '(missing) ✗'}`);
+  console.log(`  GOOGLE_CALLBACK_URL  : ${gcb  || '(missing) ✗ — will use fallback localhost URL'}`);
+
+  if (gcb && gcb.includes('localhost') && isProd) {
+    console.error('\n  ⚠  WARNING: GOOGLE_CALLBACK_URL still points to localhost in production!');
+    console.error(`     Current value : ${gcb}`);
+    console.error(`     Expected value: https://avantika-workflow-ai-fwdnhqd6c9d3hngn.centralindia-01.azurewebsites.net/api/auth/google/callback\n`);
+  }
+
+  console.log('');
+  console.log('  ── CORS / frontend config ───────────────────────');
+  const clientOrigin = env.CLIENT_ORIGIN || env.FRONTEND_URL;
+  console.log(`  CLIENT_ORIGIN  : ${clientOrigin || '(missing) ✗'}`);
+  console.log(`  SERVER_BASE_URL: ${env.SERVER_BASE_URL || '(missing) ✗'}`);
+
+  if (clientOrigin && clientOrigin.includes('localhost') && isProd) {
+    console.error('\n  ⚠  WARNING: CLIENT_ORIGIN still points to localhost in production!');
+    console.error(`     Current value : ${clientOrigin}`);
+    console.error('     Expected value: https://avantika-flow-ai.vercel.app\n');
+  }
+
+  console.log('');
+  console.log('  ── Other required vars ──────────────────────────');
+  console.log(`  JWT_SECRET   : ${env.JWT_SECRET   ? `${env.JWT_SECRET.slice(0,4)}...   ✓` : '(missing) ✗'}`);
+  console.log(`  DATABASE_URL : ${env.DATABASE_URL ? 'set ✓' : '(unset — using in-memory store)'}`);
+
+  // ── Fatal missing vars in production ──────────────────────────────────────
+  if (isProd) {
+    const missing = Object.entries(required)
+      .filter(([, v]) => !v)
+      .map(([k]) => k);
+    if (missing.length > 0) {
+      console.error('\n  ✗ FATAL: Missing required production env vars:');
+      missing.forEach((k) => console.error(`    - ${k}`));
+      console.error('  Set these in Azure App Service → Configuration → Application settings.\n');
+    } else {
+      console.log('\n  ✓ All required environment variables are present.');
+    }
+  }
+
+  console.log('─'.repeat(60) + '\n');
 });
 
 module.exports = app;
