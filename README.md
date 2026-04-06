@@ -27,21 +27,28 @@ Required values:
 - GOOGLE_CLIENT_ID
 - GOOGLE_CLIENT_SECRET
 - GOOGLE_CALLBACK_URL
-- CLIENT_ORIGIN
+- FRONTEND_URL
 - ADMIN_SECRET
 
 Recommended local values:
 
-- GOOGLE_CALLBACK_URL=http://localhost:5175/api/auth/google/callback
-- CLIENT_ORIGIN=http://localhost:5175
+- GOOGLE_CALLBACK_URL=http://localhost:3001/api/auth/google/callback
+- FRONTEND_URL=http://localhost:5175
 
 ### 2. Google Console redirect URI
 
 In your Google OAuth client, add this Authorized redirect URI:
 
 ```text
-http://localhost:5175/api/auth/google/callback
+http://localhost:3001/api/auth/google/callback
 ```
+
+Production values:
+
+- Vercel frontend env: `VITE_API_URL=https://<your-azure-backend>.azurewebsites.net`
+- Azure backend env: `FRONTEND_URL=https://avantika-flow-ai.vercel.app`
+- Azure backend env: `GOOGLE_CALLBACK_URL=https://<your-azure-backend>.azurewebsites.net/api/auth/google/callback`
+- Google Console authorized redirect URI: `https://<your-azure-backend>.azurewebsites.net/api/auth/google/callback`
 
 ### 3. Run frontend + backend
 

@@ -38,8 +38,8 @@ const isProduction = (process.env.NODE_ENV || 'development') === 'production';
 app.use(helmet());
 
 const defaultOrigins = ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176'];
-const envOrigins = (process.env.CLIENT_ORIGIN || '')
-  .split(',')
+const envOrigins = [process.env.FRONTEND_URL || '', process.env.CLIENT_ORIGIN || '']
+  .flatMap((value) => value.split(','))
   .map((o) => o.trim())
   .filter(Boolean);
 const allowedOrigins = new Set([...defaultOrigins, ...envOrigins]);
@@ -157,7 +157,7 @@ app.listen(PORT, () => {
   console.log(`    Health: http://localhost:${PORT}/health\n`);
   console.log(`    GOOGLE_CLIENT_ID: ${maskedGoogleClientId}`);
   console.log(`    GOOGLE_CALLBACK_URL: ${process.env.GOOGLE_CALLBACK_URL || '(default http://localhost:3001/api/auth/google/callback)'}`);
-  console.log(`    CLIENT_ORIGIN: ${process.env.CLIENT_ORIGIN || '(default http://localhost:5173)'}\n`);
+  console.log(`    FRONTEND_URL: ${process.env.FRONTEND_URL || process.env.CLIENT_ORIGIN || '(default http://localhost:5173)'}\n`);
 });
 
 module.exports = app;

@@ -31,8 +31,8 @@ const oauthStateStore = new Map();
 
 const googleClientId     = process.env.GOOGLE_CLIENT_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const googleCallbackUrl  = process.env.GOOGLE_CALLBACK_URL || 'http://localhost:5175/api/auth/google/callback';
-const clientOrigin       = process.env.CLIENT_ORIGIN || 'http://localhost:5175';
+const googleCallbackUrl  = process.env.GOOGLE_CALLBACK_URL || `http://localhost:${process.env.PORT || 3001}/api/auth/google/callback`;
+const frontendUrl        = process.env.FRONTEND_URL || process.env.CLIENT_ORIGIN || 'http://localhost:5175';
 // Used in verification email links — must be reachable from outside (not the proxy)
 const serverBaseUrl      = process.env.SERVER_BASE_URL || `http://localhost:${process.env.PORT || 3001}`;
 
@@ -184,7 +184,7 @@ const authStateFor = (user) => {
 };
 
 const buildCallbackRedirect = ({ token, error, authState, sourcePage, provider, redirectTo, clientOriginOverride }) => {
-  const url = new URL('/auth/callback', clientOriginOverride || clientOrigin);
+  const url = new URL('/auth/callback', clientOriginOverride || frontendUrl);
   if (token)     url.searchParams.set('token', token);
   if (error)     url.searchParams.set('error', error);
   if (authState) url.searchParams.set('auth_state', authState);
@@ -373,7 +373,7 @@ router.get('/google', (req, res) => {
     campaign_source:   req.query.campaign_source || null,
     selected_use_case: req.query.selected_use_case || null,
     redirect_to:       req.query.redirect_to || null,
-    client_origin:     req.get('origin') || null,
+    client_origin:     req.get('origin') || frontendUrl,
     created_at:        Date.now(),
   });
 
@@ -464,24 +464,24 @@ router.get('/google/callback', async (req, res) => {
 router.get('/verify-email', (req, res) => {
   const rawToken = req.query.token;
   if (!rawToken || typeof rawToken !== 'string') {
-    return res.redirect(`${clientOrigin}/email-verified-success?status=invalid_token`);
+    return res.redirect(`${frontendUrl}/email-verified-success?status=invalid_token`);
   }
 
   const hash = crypto.createHash('sha256').update(rawToken).digest('hex');
   const user = Array.from(usersById.values()).find((u) => u.verification_token_hash === hash);
 
   if (!user) {
-    return res.redirect(`${clientOrigin}/email-verified-success?status=invalid_token`);
+    return res.redirect(`${frontendUrl}/email-verified-success?status=invalid_token`);
   }
 
   if (user.email_verified) {
     // Already verified — still issue a token so they can continue
     const jwtToken = signToken(user.id);
-    return res.redirect(`${clientOrigin}/email-verified-success?status=already_verified&token=${encodeURIComponent(jwtToken)}`);
+    return res.redirect(`${frontendUrl}/email-verified-success?status=already_verified&token=${encodeURIComponent(jwtToken)}`);
   }
 
   if (!user.verification_token_expires_at || new Date(user.verification_token_expires_at).getTime() < Date.now()) {
-    return res.redirect(`${clientOrigin}/email-verified-success?status=expired_token`);
+    return res.redirect(`${frontendUrl}/email-verified-success?status=expired_token`);
   }
 
   // Activate the account
@@ -498,7 +498,7 @@ router.get('/verify-email', (req, res) => {
   createSession(user.id, user.auth_provider || 'email');
 
   return res.redirect(
-    `${clientOrigin}/email-verified-success?status=verified&token=${encodeURIComponent(jwtToken)}`
+    `${frontendUrl}/email-verified-success?status=verified&token=${encodeURIComponent(jwtToken)}`
   );
 });
 

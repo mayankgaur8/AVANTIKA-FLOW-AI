@@ -38,6 +38,8 @@ import { api, type GuideCard, type GuideStep, type ShareSettings } from '../lib/
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+import { buildApiUrl } from '../lib/config';
+
 const timeAgo = (iso: string) => {
   const ms = Date.now() - new Date(iso).getTime();
   const mins = Math.max(1, Math.floor(ms / 60000));
@@ -58,10 +60,7 @@ const normalizeImageUrl = (value: string | null | undefined) => {
   if (!value) return '';
   if (/^https?:\/\//i.test(value)) return value;
   if (value.startsWith('/uploads/')) {
-    const devApiBase = (import.meta as unknown as { env?: { VITE_API_BASE_URL?: string } }).env?.VITE_API_BASE_URL;
-    const fallbackBase = window.location.hostname === 'localhost' ? 'http://localhost:3001' : window.location.origin;
-    const base = (devApiBase && devApiBase.trim()) || fallbackBase;
-    return `${base}${value}`;
+    return buildApiUrl(value);
   }
   return value;
 };

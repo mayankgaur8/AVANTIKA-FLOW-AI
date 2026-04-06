@@ -202,7 +202,7 @@ router.post('/:guideId/share', requireAuth, (req, res) => {
 
   if (!result) return res.status(404).json({ success: false, message: 'Guide not found' });
 
-  const baseOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5175';
+  const baseOrigin = process.env.FRONTEND_URL || process.env.CLIENT_ORIGIN || 'http://localhost:5175';
   const shareUrl = result.share.share_type === 'public' && result.share.public_slug
     ? `${baseOrigin}/guides/shared/${result.share.public_slug}`
     : `${baseOrigin}/guides/${result.guide.id}`;

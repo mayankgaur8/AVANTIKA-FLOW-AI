@@ -5,7 +5,7 @@ const { patchUser, usersById } = require('../db/store');
 const router = express.Router();
 
 const adminSecret = process.env.ADMIN_SECRET || 'dev-admin-secret';
-const clientOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5175';
+const clientOrigin = process.env.FRONTEND_URL || process.env.CLIENT_ORIGIN || 'http://localhost:5175';
 
 const createTransport = () => {
   if (!process.env.SMTP_HOST || !process.env.SMTP_PORT) return null;

@@ -29,7 +29,7 @@ export const startGoogleOAuth = ({
     redirect_to: redirectTo || '',
   });
 
-  // buildApiUrl turns '/api/auth/google' into the full Azure URL in production,
-  // and keeps it relative in local dev so the Vite proxy can forward it.
+  // In production this targets the backend origin from VITE_API_URL.
+  // In local dev it stays relative so the Vite proxy can forward it.
   window.location.href = buildApiUrl(`/api/auth/google?${params.toString()}`);
 };
