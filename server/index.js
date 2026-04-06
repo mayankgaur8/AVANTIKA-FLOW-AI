@@ -175,6 +175,12 @@ app.listen(PORT, () => {
   const gsec = env.GOOGLE_CLIENT_SECRET;
   const gcb = env.GOOGLE_CALLBACK_URL;
 
+  console.log('');
+  console.log('  ── OAuth readiness flags ─────────────────────────');
+  console.log(`  googleClientIdConfigured     : ${Boolean(gid)}`);
+  console.log(`  googleClientSecretConfigured : ${Boolean(gsec)}`);
+  console.log(`  googleCallbackUrl            : ${gcb || '(missing)'}`);
+
   console.log(`  GOOGLE_CLIENT_ID     : ${gid  ? `${gid.slice(0, 12)}... ✓` : '(missing) ✗'}`);
   console.log(`  GOOGLE_CLIENT_SECRET : ${gsec ? `${gsec.slice(0, 6)}...  ✓` : '(missing) ✗'}`);
   console.log(`  GOOGLE_CALLBACK_URL  : ${gcb  || '(missing) ✗ — will use fallback localhost URL'}`);

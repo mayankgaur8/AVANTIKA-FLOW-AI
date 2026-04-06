@@ -40,6 +40,11 @@ const oauthClient = googleClientId && googleClientSecret
   ? new OAuth2Client(googleClientId, googleClientSecret, googleCallbackUrl)
   : null;
 
+const maskClientId = (value) => {
+  if (!value) return '(missing)';
+  return `${value.slice(0, 12)}...`;
+};
+
 // ─── Email ───────────────────────────────────────────────────────────────────
 
 const createTransport = () => {
@@ -383,6 +388,23 @@ router.get('/google', (req, res) => {
     prompt:      'select_account',
     state:       stateId,
   });
+
+  const resolvedClientId = (() => {
+    try {
+      return new URL(authUrl).searchParams.get('client_id');
+    } catch {
+      return null;
+    }
+  })();
+
+  console.log('[auth/google] Starting OAuth redirect');
+  console.log(`  clientId(from env): ${maskClientId(googleClientId)}`);
+  console.log(`  callbackUrl: ${googleCallbackUrl}`);
+  console.log(`  clientId(in auth URL): ${maskClientId(resolvedClientId || undefined)}`);
+
+  if (!resolvedClientId || resolvedClientId !== googleClientId) {
+    console.error('[auth/google] WARNING: client_id in generated auth URL does not match GOOGLE_CLIENT_ID');
+  }
 
   return res.redirect(authUrl);
 });
