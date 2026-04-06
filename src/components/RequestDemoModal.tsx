@@ -133,8 +133,13 @@ export function RequestDemoModal({ isOpen, onClose, sourcePage }: RequestDemoMod
             className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg px-4"
             style={{ zIndex: 9001 }}
           >
+            {/*
+              max-h-[90vh] + flex flex-col: modal never exceeds viewport height.
+              The scrollable body grows to fill available space; the header and
+              footer (submit button) are always visible.
+            */}
             <div
-              className="rounded-2xl overflow-hidden relative"
+              className="rounded-2xl overflow-hidden relative flex flex-col max-h-[90vh]"
               style={{
                 background: 'rgba(5,12,24,0.98)',
                 border: '1px solid rgba(255,255,255,0.1)',
@@ -144,7 +149,7 @@ export function RequestDemoModal({ isOpen, onClose, sourcePage }: RequestDemoMod
             >
               {/* Top gradient strip */}
               <div
-                className="h-1 w-full"
+                className="h-1 w-full flex-shrink-0"
                 style={{ background: 'linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899)' }}
               />
 
@@ -165,7 +170,7 @@ export function RequestDemoModal({ isOpen, onClose, sourcePage }: RequestDemoMod
                   </motion.div>
                   <h3 className="text-2xl font-bold text-white mb-3">Request Received!</h3>
                   <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                    Our team will contact you shortly to schedule your personalized demo.
+                    Thanks! Our team will contact you shortly to schedule your personalized demo.
                   </p>
                   <button
                     onClick={onClose}
@@ -176,80 +181,91 @@ export function RequestDemoModal({ isOpen, onClose, sourcePage }: RequestDemoMod
                   </button>
                 </motion.div>
               ) : (
-                <div className="p-6">
-                  {/* Header */}
-                  <div className="flex items-start justify-between mb-6">
+                <div className="flex flex-col flex-1 min-h-0">
+                  {/* ── Fixed header ── */}
+                  <div className="flex items-start justify-between px-6 pt-6 pb-4 flex-shrink-0">
                     <div>
                       <h2 className="text-xl font-bold text-white">Request a Demo</h2>
                       <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.45)' }}>
                         Get a personalized walkthrough with our team
                       </p>
                     </div>
-                    <button onClick={onClose} className="text-white/30 hover:text-white/70 transition-colors mt-0.5">
+                    <button onClick={onClose} className="text-white/30 hover:text-white/70 transition-colors mt-0.5 flex-shrink-0 ml-4">
                       <X size={18} />
                     </button>
                   </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-3">
-                      {field('full_name', 'Your Name', 'Jane Smith', 'text', true)}
-                      {field('email', 'Work Email', 'jane@company.com', 'email', true)}
-                    </div>
-                    {field('company', 'Company', 'Acme Corp')}
-
-                    {/* Use case selector */}
-                    <div>
-                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                        Primary Use Case
-                      </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {USE_CASES.map(uc => (
-                          <button
-                            key={uc}
-                            type="button"
-                            onClick={() => setForm(prev => ({ ...prev, use_case: uc }))}
-                            className="px-3 py-2 rounded-xl text-xs font-medium text-left transition-all duration-150"
-                            style={{
-                              background: form.use_case === uc ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.04)',
-                              border: form.use_case === uc ? '1px solid rgba(99,102,241,0.6)' : '1px solid rgba(255,255,255,0.08)',
-                              color: form.use_case === uc ? '#a5b4fc' : 'rgba(255,255,255,0.55)',
-                            }}
-                          >
-                            {uc}
-                          </button>
-                        ))}
+                  {/* ── Scrollable form body ── */}
+                  <div className="overflow-y-auto flex-1 px-6">
+                    <form id="demo-request-form" onSubmit={handleSubmit} className="space-y-4 pb-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {field('full_name', 'Your Name', 'Jane Smith', 'text', true)}
+                        {field('email', 'Work Email', 'jane@company.com', 'email', true)}
                       </div>
-                    </div>
+                      {field('company', 'Company', 'Acme Corp')}
 
-                    {/* Message */}
-                    <div>
-                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                        Message (optional)
-                      </label>
-                      <textarea
-                        rows={3}
-                        placeholder="Tell us about your team's workflow challenges..."
-                        value={form.message}
-                        onChange={e => setForm(prev => ({ ...prev, message: e.target.value }))}
-                        className="w-full px-3.5 py-2.5 rounded-xl text-sm text-white placeholder-white/30 outline-none resize-none transition-all duration-150"
-                        style={{
-                          background: 'rgba(255,255,255,0.06)',
-                          border: '1px solid rgba(255,255,255,0.1)',
-                        }}
-                        onFocus={e => (e.currentTarget.style.border = '1px solid rgba(99,102,241,0.6)')}
-                        onBlur={e => (e.currentTarget.style.border = '1px solid rgba(255,255,255,0.1)')}
-                      />
-                    </div>
+                      {/* Use case selector */}
+                      <div>
+                        <label className="block text-xs font-semibold mb-1.5" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                          Primary Use Case
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {USE_CASES.map(uc => (
+                            <button
+                              key={uc}
+                              type="button"
+                              onClick={() => setForm(prev => ({ ...prev, use_case: uc }))}
+                              className="px-3 py-2 rounded-xl text-xs font-medium text-left transition-all duration-150"
+                              style={{
+                                background: form.use_case === uc ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.04)',
+                                border: form.use_case === uc ? '1px solid rgba(99,102,241,0.6)' : '1px solid rgba(255,255,255,0.08)',
+                                color: form.use_case === uc ? '#a5b4fc' : 'rgba(255,255,255,0.55)',
+                              }}
+                            >
+                              {uc}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
 
+                      {/* Message */}
+                      <div>
+                        <label className="block text-xs font-semibold mb-1.5" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                          Message <span style={{ color: 'rgba(255,255,255,0.3)' }}>(optional)</span>
+                        </label>
+                        <textarea
+                          rows={3}
+                          placeholder="Tell us about your team's workflow challenges..."
+                          value={form.message}
+                          onChange={e => setForm(prev => ({ ...prev, message: e.target.value }))}
+                          className="w-full px-3.5 py-2.5 rounded-xl text-sm text-white placeholder-white/30 outline-none resize-none transition-all duration-150"
+                          style={{
+                            background: 'rgba(255,255,255,0.06)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                          }}
+                          onFocus={e => (e.currentTarget.style.border = '1px solid rgba(99,102,241,0.6)')}
+                          onBlur={e => (e.currentTarget.style.border = '1px solid rgba(255,255,255,0.1)')}
+                        />
+                      </div>
+                    </form>
+                  </div>
+
+                  {/* ── Pinned footer with submit button ── always visible ── */}
+                  <div
+                    className="px-6 pt-4 pb-6 flex-shrink-0"
+                    style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+                  >
                     <motion.button
+                      form="demo-request-form"
                       type="submit"
-                      disabled={loading}
+                      disabled={loading || !form.full_name.trim() || !form.email.trim()}
                       whileHover={!loading ? { scale: 1.02, boxShadow: '0 4px 20px rgba(99,102,241,0.5)' } : {}}
                       whileTap={!loading ? { scale: 0.98 } : {}}
-                      className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-white transition-opacity duration-150"
+                      className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-white transition-all duration-150"
                       style={{
                         background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                        opacity: loading ? 0.75 : 1,
+                        opacity: (loading || !form.full_name.trim() || !form.email.trim()) ? 0.55 : 1,
+                        cursor: (loading || !form.full_name.trim() || !form.email.trim()) ? 'not-allowed' : 'pointer',
                       }}
                     >
                       {loading ? (
@@ -258,11 +274,10 @@ export function RequestDemoModal({ isOpen, onClose, sourcePage }: RequestDemoMod
                         <>Request Demo <ArrowRight size={15} /></>
                       )}
                     </motion.button>
-
-                    <p className="text-center text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                    <p className="text-center text-xs mt-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
                       No spam. Our team will respond within 1 business day.
                     </p>
-                  </form>
+                  </div>
                 </div>
               )}
             </div>
