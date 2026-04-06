@@ -40,9 +40,12 @@ const oauthClient = googleClientId && googleClientSecret
   ? new OAuth2Client(googleClientId, googleClientSecret, googleCallbackUrl)
   : null;
 
+// Shows enough of the client ID to spot 1/l transpositions without exposing the secret.
+// Format: first 20 chars + "..." + last 30 chars (the .apps.googleusercontent.com suffix)
 const maskClientId = (value) => {
   if (!value) return '(missing)';
-  return `${value.slice(0, 12)}...`;
+  if (value.length <= 50) return value; // short enough to show fully
+  return `${value.slice(0, 20)}...${value.slice(-30)}`;
 };
 
 // ─── Email ───────────────────────────────────────────────────────────────────
