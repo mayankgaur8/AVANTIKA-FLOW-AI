@@ -28,6 +28,9 @@ Required values:
 - GOOGLE_CLIENT_SECRET
 - GOOGLE_CALLBACK_URL
 - FRONTEND_URL
+- CLIENT_ORIGIN
+- CORS_ORIGIN
+- SERVER_BASE_URL
 - ADMIN_SECRET
 
 Recommended local values:
@@ -47,8 +50,26 @@ Production values:
 
 - Vercel frontend env: `VITE_API_URL=https://<your-azure-backend>.azurewebsites.net`
 - Azure backend env: `FRONTEND_URL=https://avantika-flow-ai.vercel.app`
+- Azure backend env: `CLIENT_ORIGIN=https://avantika-flow-ai.vercel.app`
+- Azure backend env: `CORS_ORIGIN=https://avantika-flow-ai.vercel.app`
 - Azure backend env: `GOOGLE_CALLBACK_URL=https://<your-azure-backend>.azurewebsites.net/api/auth/google/callback`
+- Azure backend env: `SERVER_BASE_URL=https://<your-azure-backend>.azurewebsites.net`
 - Google Console authorized redirect URI: `https://<your-azure-backend>.azurewebsites.net/api/auth/google/callback`
+
+Google Cloud OAuth client settings (Web application):
+
+- Authorized JavaScript origins:
+  - `http://localhost:5175`
+  - `https://avantika-flow-ai.vercel.app`
+- Authorized redirect URIs:
+  - `http://localhost:5175/api/auth/google/callback`
+  - `https://<your-azure-backend>.azurewebsites.net/api/auth/google/callback`
+
+Azure restart after changing env vars:
+
+```bash
+az webapp restart --resource-group <your-resource-group> --name <your-app-service-name>
+```
 
 ### 3. Run frontend + backend
 

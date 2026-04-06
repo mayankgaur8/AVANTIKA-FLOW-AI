@@ -38,7 +38,7 @@ const isProduction = (process.env.NODE_ENV || 'development') === 'production';
 app.use(helmet());
 
 const defaultOrigins = ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176'];
-const envOrigins = [process.env.FRONTEND_URL || '', process.env.CLIENT_ORIGIN || '']
+const envOrigins = [process.env.FRONTEND_URL || '', process.env.CLIENT_ORIGIN || '', process.env.CORS_ORIGIN || '']
   .flatMap((value) => value.split(','))
   .map((o) => o.trim())
   .filter(Boolean);
@@ -158,7 +158,7 @@ app.listen(PORT, () => {
     GOOGLE_CLIENT_SECRET: env.GOOGLE_CLIENT_SECRET,
     GOOGLE_CALLBACK_URL:  env.GOOGLE_CALLBACK_URL,
     JWT_SECRET:           env.JWT_SECRET,
-    CLIENT_ORIGIN:        env.CLIENT_ORIGIN || env.FRONTEND_URL,
+    CLIENT_ORIGIN:        env.CLIENT_ORIGIN || env.FRONTEND_URL || env.CORS_ORIGIN,
     SERVER_BASE_URL:      env.SERVER_BASE_URL,
   };
 
@@ -174,6 +174,8 @@ app.listen(PORT, () => {
   const gid = env.GOOGLE_CLIENT_ID;
   const gsec = env.GOOGLE_CLIENT_SECRET;
   const gcb = env.GOOGLE_CALLBACK_URL;
+  const idLooksLikeOauthClient = Boolean(gid && gid.includes('.apps.googleusercontent.com') && !gid.startsWith('http'));
+  const callbackLooksValid = Boolean(gcb && gcb.startsWith('https://') && gcb.includes('/api/auth/google/callback'));
 
   console.log('');
   console.log('  ── OAuth readiness flags ─────────────────────────');
@@ -184,6 +186,19 @@ app.listen(PORT, () => {
   console.log(`  GOOGLE_CLIENT_ID     : ${gid  ? `${gid.slice(0, 12)}... ✓` : '(missing) ✗'}`);
   console.log(`  GOOGLE_CLIENT_SECRET : ${gsec ? `${gsec.slice(0, 6)}...  ✓` : '(missing) ✗'}`);
   console.log(`  GOOGLE_CALLBACK_URL  : ${gcb  || '(missing) ✗ — will use fallback localhost URL'}`);
+  console.log(`  clientIdFormatValid  : ${idLooksLikeOauthClient}`);
+  console.log(`  callbackUrlValid     : ${callbackLooksValid}`);
+
+  if (gid && !idLooksLikeOauthClient) {
+    console.error('\n  ⚠  WARNING: GOOGLE_CLIENT_ID does not look like a Web OAuth client id.');
+    console.error('     Expected format: <numeric-id>-<suffix>.apps.googleusercontent.com');
+    console.error(`     Current value  : ${gid}\n`);
+  }
+
+  if (gcb && !gcb.includes('/api/auth/google/callback')) {
+    console.error('\n  ⚠  WARNING: GOOGLE_CALLBACK_URL is missing /api/auth/google/callback path.');
+    console.error(`     Current value  : ${gcb}\n`);
+  }
 
   if (gcb && gcb.includes('localhost') && isProd) {
     console.error('\n  ⚠  WARNING: GOOGLE_CALLBACK_URL still points to localhost in production!');
@@ -193,8 +208,10 @@ app.listen(PORT, () => {
 
   console.log('');
   console.log('  ── CORS / frontend config ───────────────────────');
-  const clientOrigin = env.CLIENT_ORIGIN || env.FRONTEND_URL;
+  const clientOrigin = env.CLIENT_ORIGIN || env.FRONTEND_URL || env.CORS_ORIGIN;
   console.log(`  CLIENT_ORIGIN  : ${clientOrigin || '(missing) ✗'}`);
+  console.log(`  FRONTEND_URL   : ${env.FRONTEND_URL || '(missing) ✗'}`);
+  console.log(`  CORS_ORIGIN    : ${env.CORS_ORIGIN || '(missing) ✗'}`);
   console.log(`  SERVER_BASE_URL: ${env.SERVER_BASE_URL || '(missing) ✗'}`);
 
   if (clientOrigin && clientOrigin.includes('localhost') && isProd) {
