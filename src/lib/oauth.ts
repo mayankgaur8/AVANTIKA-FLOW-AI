@@ -29,7 +29,11 @@ export const startGoogleOAuth = ({
     redirect_to: redirectTo || '',
   });
 
-  // In production this targets the backend origin from VITE_API_URL.
-  // In local dev it stays relative so the Vite proxy can forward it.
-  window.location.href = buildApiUrl(`/api/auth/google?${params.toString()}`);
+  const authUrl = buildApiUrl(`/api/auth/google?${params.toString()}`);
+
+  // Debug log — open DevTools → Console before clicking Sign In to verify
+  // the URL points to the Azure backend, not the Vercel frontend.
+  console.info('[oauth] Redirecting to Google auth:', authUrl);
+
+  window.location.href = authUrl;
 };

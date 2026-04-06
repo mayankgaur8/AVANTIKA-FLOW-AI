@@ -1,26 +1,43 @@
 /**
- * API_BASE_URL is the root URL of the backend API.
+ * API_BASE_URL — root URL of the Azure backend.
  *
- * In production (Vercel):  VITE_API_URL=https://your-backend.azurewebsites.net
- * In local dev:            VITE_API_URL is unset -> empty string -> Vite proxy handles /api -> localhost:3001
+ * Production (Vercel):  VITE_API_URL=https://avantika-workflow-ai-fwdnhqd6c9d3hngn.centralindia-01.azurewebsites.net
+ * Local dev:            leave unset — Vite proxy forwards /api → localhost:3001
  *
- * Never hardcode backend URLs anywhere else. Import from here.
+ * Env vars starting with VITE_ are injected at BUILD TIME by Vite.
+ * Setting the var in Vercel requires a new deployment to take effect.
  */
-export const API_BASE_URL = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
+const _raw = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
+
+// Log on startup so you can open DevTools → Console and immediately see
+// whether the Azure URL was baked in or is missing.
+if (import.meta.env.PROD) {
+  if (_raw) {
+    console.info(`[config] VITE_API_URL → ${_raw}`);
+  } else {
+    console.error(
+      '[config] ⚠ VITE_API_URL is not set. ' +
+      'All API calls and OAuth redirects will be relative (hitting Vercel, not Azure). ' +
+      'Add VITE_API_URL in Vercel → Settings → Environment Variables, then redeploy.'
+    );
+  }
+}
+
+export const API_BASE_URL = _raw;
 
 const normalizeApiPath = (path: string) => (path.startsWith('/') ? path : `/${path}`);
 
-/** Builds a backend URL for both fetch() and browser redirects. */
+/**
+ * Build a URL to the backend.
+ * - Production with VITE_API_URL set → absolute Azure URL
+ * - Local dev (no VITE_API_URL) → relative path, forwarded by Vite proxy
+ * - Production WITHOUT VITE_API_URL → logs an error, falls back to relative
+ *   (which will 404 on Vercel, but at least won't throw a silent JS crash)
+ */
 export const buildApiUrl = (path: string): string => {
-	const normalizedPath = normalizeApiPath(path);
-
-	if (API_BASE_URL) {
-		return `${API_BASE_URL}${normalizedPath}`;
-	}
-
-	if (import.meta.env.PROD) {
-		throw new Error('Missing VITE_API_URL in production. Set it to the Azure backend origin.');
-	}
-
-	return normalizedPath;
+  const normalizedPath = normalizeApiPath(path);
+  if (API_BASE_URL) {
+    return `${API_BASE_URL}${normalizedPath}`;
+  }
+  return normalizedPath;
 };
